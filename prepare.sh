@@ -13,8 +13,8 @@ uniq $FO.srt.csv > $FO.srt.uniq.csv
 # enumerate
 nl -s";" -nln -w1 $FO.srt.uniq.csv > $FL.srt.uniq.num.csv
 # ru
-grep -i "[а-я]+" $FL.srt.uniq.num.ru.csv
+grep -i "[а-я]+"  $FL.srt.uniq.num.csv > $FL.srt.uniq.num.ru.csv
 # de
-grep -i "[äöüß]+" $FL.srt.uniq.num.de.csv
+grep -i "[äöüß]+" $FL.srt.uniq.num.csv > $FL.srt.uniq.num.de.csv
 # en
-grep -v -i "[а-яäöüß]+" $FL.srt.uniq.num.en.csv
+grep -v -i "[а-яäöüß]+" $FL.srt.uniq.num.csv > $FL.srt.uniq.num.en.csv
