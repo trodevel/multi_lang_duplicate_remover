@@ -8,7 +8,7 @@ OUTP=$2
 [[ ! -f $INP ]] && echo "ERROR: input file $INP is missing" && exit 1
 
 #FO="${INP%%.*}"
-FO="$FL"  # work-around
+FO="$INP"  # work-around
 
 ./convert_xlsx_to_csv.sh $FO.srt.uniq.num.en.ru.xlsx
 ./convert_xlsx_to_csv.sh $FO.srt.uniq.num.ru.en.xlsx
