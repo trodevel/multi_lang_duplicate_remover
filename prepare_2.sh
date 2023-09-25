@@ -7,7 +7,8 @@ OUTP=$2
 [[ -z $OUTP ]]  && echo "ERROR: output file is not given" && exit 1
 [[ ! -f $INP ]] && echo "ERROR: input file $INP is missing" && exit 1
 
-FO="${INP%%.*}"
+#FO="${INP%%.*}"
+FO="$FL"  # work-around
 
 ./convert_xlsx_to_csv.sh $FO.srt.uniq.num.en.ru.xlsx
 ./convert_xlsx_to_csv.sh $FO.srt.uniq.num.ru.en.xlsx
