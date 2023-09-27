@@ -48,7 +48,14 @@ class SimilarityType(int,Enum):
     DUPLICATE=2
 
 def check_similarity( w_1: str, w_2: str ) -> SimilarityType:
-    return 0
+    r = fuzz.ratio( w_1, w_2 )
+
+    if r >= 95:
+        return SimilarityType.DUPLICATE
+    elif r >= 80:
+        return SimilarityType.SIMILAR
+
+    return SimilarityType.DIFFERENT
 
 def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
 
@@ -105,8 +112,8 @@ def process( inp_filenames: [str], outp_filenames: [str] ):
 
 def main( argv ):
 
-    input_files  = None
-    output_files = None
+    input_files  = []
+    output_files = []
     loglevel    = 0
 
     try:
