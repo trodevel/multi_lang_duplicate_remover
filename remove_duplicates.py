@@ -39,8 +39,11 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
     for k, v in map_a.items():
 
         processed_keys[ k ] = 1
-        res_a[ k ] = []
-        res_a[ k ].append( v )
+
+        matches = []
+
+        # put initial word
+        matches.append( v )
 
         v_clean = clean_word( v )
 
@@ -52,8 +55,18 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
 
             similarity_type = check_similarity( v_clean, v_2_clean )
 
-            if similarity_type == 2:
+            if similarity_type == SimilarityType.DUPLICATE:
+                # duplicate, just ignore it
                 processed_keys[ k ] = 1
+            elif similarity_type == SimilarityType.SIMILAR:
+                # similar, but not a duplicate, add it
+                processed_keys[ k ] = 1
+                matches.append( v )
+            else:
+                # do nothing
+                pass
+
+        res_a[ k ] = matches
 
     return [ res_a, res_b ]
 
