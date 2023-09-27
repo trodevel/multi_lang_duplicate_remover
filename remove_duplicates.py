@@ -1,5 +1,6 @@
 import csv
 from enum import Enum
+from thefuzz import fuzz
 
 import sys, getopt
 
@@ -17,6 +18,9 @@ def read_map( filename: str ) -> {}:
     print( f"INFO: read {len(res)} records from {filename}" )
 
     return res
+
+def remove_all_whitespaces( w: str ) -> str:
+    return ''.join(w.split())
 
 def clean_word( w: str ) -> str:
     return w
