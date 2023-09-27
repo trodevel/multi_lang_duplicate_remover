@@ -19,6 +19,15 @@ def read_map( filename: str ) -> {}:
 
     return res
 
+def write_map( filename: str, m: {} ) -> None:
+
+    writer = csv.writer( open( filename, "w" ), delimiter=';', lineterminator='\n' )
+
+    for k, v in m.items():
+        writer.writerow( ( v ) )
+
+    print( f"INFO: wrote {len(m)} records to {filename}" )
+
 def remove_all_whitespaces( w: str ) -> str:
     return ''.join(w.split())
 
