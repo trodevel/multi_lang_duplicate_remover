@@ -44,8 +44,8 @@ def clean_word( w: str ) -> str:
 
 class SimilarityType(int,Enum):
     DIFFERENT = 0
-    SIMILAR = 1
-    DUPLICATE=2
+    SIMILAR   = 1
+    DUPLICATE = 2
 
 def check_similarity( w_1: str, w_2: str ) -> SimilarityType:
     r = fuzz.ratio( w_1, w_2 )
