@@ -1,4 +1,5 @@
 import csv
+from enum import Enum
 
 import sys, getopt
 
@@ -10,11 +11,51 @@ def read_map( filename: str ) -> {}:
         reader = csv.reader( csvfile, delimiter=';' )
         for row in reader:
             [k,v] = row[0:2]
+            k = int( k )
             res[ k ] = v
 
     print( f"INFO: read {len(res)} records from {filename}" )
 
     return res
+
+def clean_word( w: str ) -> str:
+    return w
+
+class SimilarityType(int,Enum):
+    DIFFERENT = 0
+    SIMILAR = 1
+    DUPLICATE=2
+
+def check_similarity( w_1: str, w_2: str ) -> SimilarityType:
+    return 0
+
+def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
+
+    res_a = {}
+    res_b = {}
+
+    processed_keys = {}
+
+    for k, v in map_a.items():
+
+        processed_keys[ k ] = 1
+        res_a[ k ] = []
+        res_a[ k ].append( v )
+
+        v_clean = clean_word( v )
+
+        for k_2, v_2 in map_a.items():
+            if k_2 in processed_keys:
+                continue
+
+            v_2_clean = clean_word( v_2 )
+
+            similarity_type = check_similarity( v_clean, v_2_clean )
+
+            if similarity_type == 2:
+                processed_keys[ k ] = 1
+
+    return [ res_a, res_b ]
 
 def process( inp_filenames: [str], outp_filenames: [str] ):
 
@@ -23,6 +64,7 @@ def process( inp_filenames: [str], outp_filenames: [str] ):
     map_a = read_map( inp_filenames[0] )
     map_b = read_map( inp_filenames[1] )
 
+    
 
 
 def main( argv ):
