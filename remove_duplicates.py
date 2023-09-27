@@ -22,8 +22,16 @@ def read_map( filename: str ) -> {}:
 def remove_all_whitespaces( w: str ) -> str:
     return ''.join(w.split())
 
+def remove_all_nonalphanum( w: str ) -> str:
+    return ''.join(e for e in w if e.isalnum())
+
 def clean_word( w: str ) -> str:
-    return w
+
+    w1 = remove_all_nonalphanum( w )
+
+    w2 = w1.lower()
+
+    return w2
 
 class SimilarityType(int,Enum):
     DIFFERENT = 0
