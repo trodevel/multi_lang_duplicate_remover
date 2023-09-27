@@ -98,8 +98,10 @@ def process( inp_filenames: [str], outp_filenames: [str] ):
     map_a = read_map( inp_filenames[0] )
     map_b = read_map( inp_filenames[1] )
 
-    
+    res_a, res_b = remove_duplicates( map_a, map_b )
 
+    write_map( res_a, outp_filenames[0] )
+    write_map( res_b, outp_filenames[1] )
 
 def main( argv ):
 
