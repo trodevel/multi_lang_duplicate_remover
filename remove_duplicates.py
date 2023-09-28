@@ -19,7 +19,7 @@ def read_map( filename: str ) -> {}:
 
     return res
 
-def write_map( filename: str, m: {} ) -> None:
+def write_map( m: {}, filename: str ) -> None:
 
     writer = csv.writer( open( filename, "w" ), delimiter=';', lineterminator='\n' )
 
