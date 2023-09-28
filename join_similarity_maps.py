@@ -136,7 +136,7 @@ class SimilarityGroupJoiner:
             self.processed_keys[k] = 1
             self._find_similarities_in_map( k, True )
 
-    def _find_similarities_in_map( k: int, is_map_a: bool ) -> None:
+    def _find_similarities_in_map( self, k: int, is_map_a: bool ) -> None:
 
         map_a_or_b = self.map_a if is_map_a else self.map_b
 
