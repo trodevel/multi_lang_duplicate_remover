@@ -90,14 +90,14 @@ def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityTy
     #print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
     return SimilarityType.DIFFERENT
 
-class DuplicateRemover:
+class SimilarityGroupJoiner:
 
     def __init__( self, map_a: {}, similarity_pct: int ):
         self.map_a = map_a
         self.similarity_pct = similarity_pct
         self.iteration_processed_keys = None
 
-    def remove_duplicates(self) -> [[], []]:
+    def join_groups(self) -> [[], []]:
 
         res = self._refine_and_find_duplicates( self.map_a )
 
@@ -213,15 +213,16 @@ class DuplicateRemover:
         return similar_values
 
 
-def process( inp_filename: str, outp_filename: str, similarity_pct: int ):
+def process( inp_filenames: [str], outp_filename: str, similarity_pct: int ):
 
     num_req = 0
 
-    map_a = read_map( inp_filename )
+    map_a = read_similarity_map( inp_filenames[0] )
+    map_b = read_similarity_map( inp_filenames[1] )
 
-    r = DuplicateRemover( map_a, similarity_pct )
+    r = SimilarityGroupJoiner( map_a, map_b, similarity_pct )
 
-    res = r.remove_duplicates()
+    res = r.join_groups()
 
     write_map( res, outp_filename )
 
@@ -265,7 +266,7 @@ def main( argv ):
         print( "FATAL: need output filename" )
         sys.exit( 1 )
 
-    process( input_file, output_file, similarity_pct )
+    process( input_files, output_file, similarity_pct )
 
     sys.exit( 0 )
 
