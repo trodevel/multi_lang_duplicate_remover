@@ -96,20 +96,14 @@ class DuplicateRemover:
         self.map_a = map_a
         self.map_b = map_b
         self.similarity_pct = similarity_pct
-        self.processed_keys = None
-        self.duplicate_keys = None
+        self.iteration_processed_keys = None
 
     def remove_duplicates(self) -> [[], []]:
 
         res_a = []
         res_b = []
 
-        self.processed_keys = {}
-        self.duplicate_keys = {}
-
         res_a = self._refine_and_find_duplicates( self.map_a )
-
-        self.processed_keys = self.duplicate_keys
 
         res_b = self._refine_and_find_duplicates( self.map_b )
 
@@ -118,11 +112,11 @@ class DuplicateRemover:
 
     def _refine_and_find_duplicates( self, map_raw: {} ) -> []:
 
-        print( f"DEBUG: refining map" )
+        print( f"INFO: refining map" )
 
         map_refined = refine_map( map_raw )
 
-        print( f"DEBUG: finding duplicates" )
+        print( f"INFO: finding duplicates" )
 
         res = self._find_duplicates( map_refined )
 
@@ -135,6 +129,8 @@ class DuplicateRemover:
         num_rec = len( map_refined )
         cur_rec = 0
 
+        self.iteration_processed_keys = {}
+
         while len( map_refined ):
 
             k = next( iter( map_refined ) )
@@ -142,14 +138,16 @@ class DuplicateRemover:
 
             cur_rec += 1
 
-            print( f"DEBUG: processing record {cur_rec}/{num_rec}, key {k}, num processed keys {len(self.processed_keys)}" )
+            print( f"DEBUG: processing record {cur_rec}/{num_rec}, key {k}, num processed keys {len(self.iteration_processed_keys)}" )
 
             self._find_duplicates_once( k, v, map_refined )
 
             if len( self.iteration_matches ) > 1:
                 print( f"DEBUG: removing processed {len(self.iteration_matches)} elements" )
 
-            for k_m in self.iteration_matches:
+            #print( f"DEBUG: iteration processed keys {self.iteration_processed_keys}" )
+            for k_m in self.iteration_processed_keys.keys():
+                #print( f"DEBUG: removing key {k_m}" )
                 del map_refined[k_m]
 
             res.append( self.iteration_matches )
@@ -160,12 +158,8 @@ class DuplicateRemover:
 
         res = []
 
-        if k in self.processed_keys:
-            return res
-
-        self.processed_keys[ k ] = 1
-
         self.iteration_matches = []
+        self.iteration_processed_keys = { k: 1 }
 
         # put initial word
         self.iteration_matches.append( k )
@@ -188,19 +182,17 @@ class DuplicateRemover:
         similar_values = []
 
         for k_2, v_2 in map_refined.items():
-            if k_2 in self.processed_keys:
+            if k_2 in self.iteration_processed_keys:
                 continue
 
             similarity_type = check_similarity( v, v_2, self.similarity_pct )
 
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
-                self.processed_keys[ k_2 ] = 1
-                self.duplicate_keys[ k_2 ] = 1
+                self.iteration_processed_keys[ k_2 ] = 1
             elif similarity_type == SimilarityType.SIMILAR:
                 # similar, but not a duplicate, add it
-                self.processed_keys[ k_2 ] = 1
-                self.duplicate_keys[ k_2 ] = 1
+                self.iteration_processed_keys[ k_2 ] = 1
                 similar_values.append( v_2 )
                 self.iteration_matches.append( k_2 )
             else:
