@@ -146,10 +146,10 @@ class DuplicateRemover:
 
             self.processed_keys[ k ] = 1
 
-            self.matches = []
+            self.iteration_matches = []
 
             # put initial word
-            self.matches.append( k )
+            self.iteration_matches.append( k )
 
             similar_values = self._find_duplicates_for_word( v, map_refined )
 
@@ -160,7 +160,7 @@ class DuplicateRemover:
                     if len( n ):
                         print( f"DEBUG: found {len(n)} additional similar values" )
 
-            res[ k ] = self.matches
+            res[ k ] = self.iteration_matches
 
         return res
 
@@ -183,7 +183,7 @@ class DuplicateRemover:
                 self.processed_keys[ k_2 ] = 1
                 self.duplicate_keys[ k_2 ] = 1
                 similar_values.append( v_2 )
-                self.matches.append( k_2 )
+                self.iteration_matches.append( k_2 )
             else:
                 # do nothing
                 pass
