@@ -245,8 +245,7 @@ def main( argv ):
         elif opt in ("-D", "--DEBUG"):
             loglevel = 1
         elif opt in ("-i", "--ifile"):
- input_files = arg.split(',')
-            input_file = arg
+            input_files = arg.split(',')
         elif opt in ("-o", "--ofile"):
             output_file = arg
         elif opt in ("-s", "--sim"):
