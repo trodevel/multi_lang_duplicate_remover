@@ -92,6 +92,7 @@ class DuplicateRemover:
         self.processed_keys = {}
 
         res_a = self._find_duplicates( self.map_a_refined )
+        res_b = self._find_duplicates( self.map_b_refined )
 
         return [ res_a, res_b ]
 
