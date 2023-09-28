@@ -42,6 +42,15 @@ def clean_word( w: str ) -> str:
 
     return w2
 
+def clean_map( m: {} ) -> {}:
+
+    res = {}
+
+    for k, v in m.items():
+        res[ k ] = clean_word( v )
+
+    return res
+
 class SimilarityType(int,Enum):
     DIFFERENT = 0
     SIMILAR   = 1
