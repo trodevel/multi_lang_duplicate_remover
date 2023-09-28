@@ -84,10 +84,11 @@ class DuplicateRemover:
         res_b = {}
 
         self.processed_keys = {}
+        self.duplicate_keys = {}
 
         res_a = self._refine_and_find_duplicates( self.map_a )
 
-        self.processed_keys = {}
+        self.processed_keys = self.duplicate_keys
 
         res_b = self._refine_and_find_duplicates( self.map_b )
 
@@ -120,7 +121,7 @@ class DuplicateRemover:
             if k in self.processed_keys:
                 continue
 
-            print( f"DEBUG: processing record {cur_rec}/{num_rec}, num processed keys {len(self.processed_keys)}" )
+            print( f"DEBUG: processing record {cur_rec}/{num_rec}, key {k}, num processed keys {len(self.processed_keys)}" )
 
             self.processed_keys[ k ] = 1
 
@@ -155,9 +156,11 @@ class DuplicateRemover:
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
                 self.processed_keys[ k_2 ] = 1
+                self.duplicate_keys[ k_2 ] = 1
             elif similarity_type == SimilarityType.SIMILAR:
                 # similar, but not a duplicate, add it
                 self.processed_keys[ k_2 ] = 1
+                self.duplicate_keys[ k_2 ] = 1
                 similar_values.append( v_2 )
                 self.matches.append( k_2 )
             else:
