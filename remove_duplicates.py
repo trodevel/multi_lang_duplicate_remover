@@ -56,7 +56,28 @@ class SimilarityType(int,Enum):
     SIMILAR   = 1
     DUPLICATE = 2
 
+def is_fuzzy_comparison_needed( w_1: str, w_2: str, similarity_pct: int ) -> bool:
+    l1 = len( w_1 )
+    l2 = len( w_2 )
+
+    if l1 == l2:
+        return True
+
+    mx = max( l1, l2 )
+    mn = min( l1, l2 )
+
+    ratio = mn * 100 / mx
+
+    if ratio >= similarity_pct:
+        return True
+
+    return False
+
 def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityType:
+
+    if is_fuzzy_comparison_needed( w_1, w_2, similarity_pct ) == False:
+        return SimilarityType.DIFFERENT
+
     r = fuzz.ratio( w_1, w_2 )
 
     if r >= 95:
