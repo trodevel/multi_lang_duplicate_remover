@@ -92,22 +92,16 @@ def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityTy
 
 class DuplicateRemover:
 
-    def __init__( self, map_a: {}, map_b: {}, similarity_pct: int ):
+    def __init__( self, map_a: {}, similarity_pct: int ):
         self.map_a = map_a
-        self.map_b = map_b
         self.similarity_pct = similarity_pct
         self.iteration_processed_keys = None
 
     def remove_duplicates(self) -> [[], []]:
 
-        res_a = []
-        res_b = []
+        res = self._refine_and_find_duplicates( self.map_a )
 
-        res_a = self._refine_and_find_duplicates( self.map_a )
-
-        res_b = self._refine_and_find_duplicates( self.map_b )
-
-        return [ res_a, res_b ]
+        return res
 
     def _join_keys( list_a: [], list_b: [] ) -> []:
 
@@ -219,29 +213,27 @@ class DuplicateRemover:
         return similar_values
 
 
-def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
+def process( inp_filename: str, outp_filename: str, similarity_pct: int ):
 
     num_req = 0
 
-    map_a = read_map( inp_filenames[0] )
-    map_b = read_map( inp_filenames[1] )
+    map_a = read_map( inp_filename )
 
-    r = DuplicateRemover( map_a, map_b, similarity_pct )
+    r = DuplicateRemover( map_a, similarity_pct )
 
-    res_a, res_b = r.remove_duplicates()
+    res = r.remove_duplicates()
 
-    write_map( res_a, outp_filenames[0] )
-    write_map( res_b, outp_filenames[1] )
+    write_map( res, outp_filename )
 
 def main( argv ):
 
-    input_files  = []
-    output_files = []
+    input_file  = None
+    output_file = None
     loglevel    = 0
     similarity_pct = 85
 
     try:
-        opts, args = getopt.getopt(argv,"hHdi:s:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","offset="])
+        opts, args = getopt.getopt(argv,"hHdi:s:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","ofile="])
     except getopt.GetoptError:
         print( 'remove_duplicates.py [-H]' )
         sys.exit(2)
@@ -252,26 +244,27 @@ def main( argv ):
         elif opt in ("-D", "--DEBUG"):
             loglevel = 1
         elif opt in ("-i", "--ifile"):
-            input_files = arg.split(',')
+            input_file = arg
         elif opt in ("-o", "--ofile"):
-            output_files = arg.split(',')
+            output_file = arg
         elif opt in ("-s", "--sim"):
             similarity_pct = int( arg )
 
     #set_loglevel( loglevel )
 
-    print( f"DEBUG: num input file = {len(input_files)}" )
+    print( f"DEBUG: input file     = {input_file}" )
+    print( f"DEBUG: output file    = {output_file}" )
     print( f"DEBUG: similarity_pct = {similarity_pct}" )
 
-    if len( input_files ) != 2:
-        print( "FATAL: need 2 comma-separated input filenames" )
+    if not input_file:
+        print( "FATAL: need input filename" )
         sys.exit( 1 )
 
-    if len( output_files ) != 2:
-        print( "FATAL: need 2 comma-separated output filenames" )
+    if not output_file:
+        print( "FATAL: need output filename" )
         sys.exit( 1 )
 
-    process( input_files, output_files, similarity_pct )
+    process( input_file, output_file, similarity_pct )
 
     sys.exit( 0 )
 
