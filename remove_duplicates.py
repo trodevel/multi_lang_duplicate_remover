@@ -114,24 +114,7 @@ class DuplicateRemover:
             # put initial word
             matches.append( orig_v )
 
-            for k_2, v_2 in self.map_a_refined.items():
-                if k_2 in self.processed_keys:
-                    continue
-
-                similarity_type = check_similarity( v, v_2, self.similarity_pct )
-
-                if similarity_type == SimilarityType.DUPLICATE:
-                    # duplicate, just ignore it
-                    self.processed_keys[ k_2 ] = 1
-                elif similarity_type == SimilarityType.SIMILAR:
-                    # similar, but not a duplicate, add it
-                    self.processed_keys[ k_2 ] = 1
-                    similar_keys[ k_2 ] = 1
-                    orig_v_2 = self.map_a[ k_2 ]
-                    matches.append( orig_v_2 )
-                else:
-                    # do nothing
-                    pass
+            self._remove_duplicates_for_word( v )
 
             if len( similar_keys ):
                 pass
@@ -139,6 +122,28 @@ class DuplicateRemover:
             res_a[ k ] = matches
 
         return [ res_a, res_b ]
+
+    def _remove_duplicates_for_word( self, v: str ):
+
+        for k_2, v_2 in self.map_a_refined.items():
+            if k_2 in self.processed_keys:
+                continue
+
+            similarity_type = check_similarity( v, v_2, self.similarity_pct )
+
+            if similarity_type == SimilarityType.DUPLICATE:
+                # duplicate, just ignore it
+                self.processed_keys[ k_2 ] = 1
+            elif similarity_type == SimilarityType.SIMILAR:
+                # similar, but not a duplicate, add it
+                self.processed_keys[ k_2 ] = 1
+                similar_keys[ k_2 ] = 1
+                orig_v_2 = self.map_a[ k_2 ]
+                matches.append( orig_v_2 )
+            else:
+                # do nothing
+                pass
+
 
 def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
 
