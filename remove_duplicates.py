@@ -161,7 +161,7 @@ class DuplicateRemover:
         res = []
 
         if k in self.processed_keys:
-            continue
+            return res
 
         self.processed_keys[ k ] = 1
 
