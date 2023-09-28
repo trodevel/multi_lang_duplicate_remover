@@ -108,7 +108,7 @@ class SimilarityGroupJoiner:
 
         self.processed_keys = {}
 
-        for group in map_a:
+        for group in self.map_a:
 
             self.current_joined_similarity_group = []
 
