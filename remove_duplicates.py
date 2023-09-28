@@ -112,7 +112,7 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
                 # similar, but not a duplicate, add it
                 processed_keys[ k_2 ] = 1
                 orig_v_2 = map_a[ k_2 ]
-                matches.append( v_2 )
+                matches.append( orig_v_2 )
             else:
                 # do nothing
                 pass
