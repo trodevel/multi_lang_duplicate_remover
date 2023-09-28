@@ -102,7 +102,7 @@ class DuplicateRemover:
 
         print( f"DEBUG: finding duplicates" )
 
-        res = self._find_duplicates( self.map_refined )
+        res = self._find_duplicates( map_refined )
 
         return res
 
