@@ -44,6 +44,8 @@ class SimilarityGroupJoiner:
 
         self.processed_keys = {}
 
+        all_groups = self._get_all_groups()
+
         for group in self.map_a:
 
             self.current_joined_similarity_group = []
@@ -51,6 +53,18 @@ class SimilarityGroupJoiner:
             self._process_group_of_map_a( group )
 
             res.append( self.current_joined_similarity_group )
+
+        return res
+
+    def _get_all_groups( self ) -> [[]]:
+
+        res = []
+
+        for group in self.map_a:
+            res.append( group )
+
+        for group in self.map_b:
+            res.append( group )
 
         return res
 
