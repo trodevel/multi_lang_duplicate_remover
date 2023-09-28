@@ -91,10 +91,19 @@ class DuplicateRemover:
 
         self.processed_keys = {}
 
-        num_rec = len( self.map_a )
+        res_a = self._find_duplicates( self.map_a_refined )
+
+        return [ res_a, res_b ]
+
+
+    def _find_duplicates( self, map_refined: {} ):
+
+        res = {}
+
+        num_rec = len( map_redined )
         cur_rec = 0
 
-        for k, v in self.map_a_refined.items():
+        for k, v in map_refined.items():
 
             cur_rec += 1
 
@@ -105,28 +114,28 @@ class DuplicateRemover:
 
             self.processed_keys[ k ] = 1
 
-            self.matches_a = []
+            self.matches = []
 
             # put initial word
-            self.matches_a.append( k )
+            self.matches.append( k )
 
-            similar_values = self._remove_duplicates_for_word( v )
+            similar_values = self._find_duplicates_for_word( v )
 
             if len( similar_values ):
                 print( f"DEBUG: num similar values {len(similar_values)}" )
                 for e in similar_values:
-                    n = self._remove_duplicates_for_word( e )
+                    n = self._find_duplicates_for_word( e )
                     print( f"DEBUG: found {len(n)} additional similar values" )
 
-            res_a[ k ] = self.matches_a
+            res[ k ] = self.matches
 
-        return [ res_a, res_b ]
+        return res
 
-    def _remove_duplicates_for_word( self, v: str ):
+    def _find_duplicates_for_word( self, v: str, map_refined: {} ):
 
         similar_values = []
 
-        for k_2, v_2 in self.map_a_refined.items():
+        for k_2, v_2 in map_refined.items():
             if k_2 in self.processed_keys:
                 continue
 
@@ -139,8 +148,7 @@ class DuplicateRemover:
                 # similar, but not a duplicate, add it
                 self.processed_keys[ k_2 ] = 1
                 similar_values.append( v_2 )
-                orig_v_2 = self.map_a[ k_2 ]
-                self.matches_a.append( k_2 )
+                self.matches.append( k_2 )
             else:
                 # do nothing
                 pass
