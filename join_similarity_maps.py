@@ -97,7 +97,7 @@ def process( inp_filenames: [str], outp_filename: str ):
 
     res = r.join_groups()
 
-#    write_map( res, outp_filename )
+    write_map( res, outp_filename )
 
 def main( argv ):
 
