@@ -93,18 +93,6 @@ class SimilarityGroupJoiner:
 
         return all_keys.keys()
 
-    def _get_all_groups( self ) -> [[]]:
-
-        res = []
-
-        for group in self.map_a:
-            res.append( group )
-
-        for group in self.map_b:
-            res.append( group )
-
-        return res
-
     def _process_group_of_map_a( self, group: [] ):
 
         for k in group:
