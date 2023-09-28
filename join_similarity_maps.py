@@ -4,16 +4,16 @@ from thefuzz import fuzz
 
 import sys, getopt
 
-def read_similarity_map( filename: str ) -> {}:
+def read_similarity_map( filename: str ) -> []:
 
-    res = {}
+    res = []
 
     with open( filename ) as csvfile:
         reader = csv.reader( csvfile, delimiter=';' )
         for row in reader:
-            [k,v] = row[0:2]
-            k = int( k )
-            res[ k ] = v
+            int_row = []
+            for i in row:
+                int_row.append( int( i ) )
 
     print( f"INFO: read {len(res)} records from {filename}" )
 
@@ -220,11 +220,11 @@ def process( inp_filenames: [str], outp_filename: str, similarity_pct: int ):
     map_a = read_similarity_map( inp_filenames[0] )
     map_b = read_similarity_map( inp_filenames[1] )
 
-    r = SimilarityGroupJoiner( map_a, map_b, similarity_pct )
+#    r = SimilarityGroupJoiner( map_a, map_b, similarity_pct )
 
-    res = r.join_groups()
+#    res = r.join_groups()
 
-    write_map( res, outp_filename )
+#    write_map( res, outp_filename )
 
 def main( argv ):
 
