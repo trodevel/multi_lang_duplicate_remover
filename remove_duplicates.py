@@ -109,6 +109,19 @@ class DuplicateRemover:
 
         return [ res_a, res_b ]
 
+    def _join_keys( list_a: [], list_b: [] ) -> []:
+
+        print( f"INFO: joining keys" )
+
+        res = []
+
+        for sim_group in list_a:
+            for e in sim_group:
+
+        return res
+
+    def _find_similarity_group( k: int, list_b: [] ) -> []:
+        pass
 
     def _refine_and_find_duplicates( self, map_raw: {} ) -> []:
 
@@ -126,7 +139,7 @@ class DuplicateRemover:
 
         res = []
 
-        num_rec = len( map_refined )
+        orig_size = len( map_refined )
         cur_rec = 0
 
         self.iteration_processed_keys = {}
@@ -137,8 +150,11 @@ class DuplicateRemover:
             v = map_refined[k]
 
             cur_rec += 1
+            cur_size = len( map_refined )
 
-            print( f"DEBUG: processing record {cur_rec}/{num_rec}, key {k}, num processed keys {len(self.iteration_processed_keys)}" )
+            progress_pct = ( orig_size - cur_size ) * 100 / orig_size
+
+            print( f"DEBUG: processing record {cur_rec}, key {k}, new map size {len( map_refined )}, {progress_pct} %" )
 
             self._find_duplicates_once( k, v, map_refined )
 
