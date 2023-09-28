@@ -34,7 +34,7 @@ def remove_all_whitespaces( w: str ) -> str:
 def remove_all_nonalphanum( w: str ) -> str:
     return ''.join(e for e in w if e.isalnum())
 
-def clean_word( w: str ) -> str:
+def refine_word( w: str ) -> str:
 
     w1 = remove_all_nonalphanum( w )
 
@@ -42,12 +42,12 @@ def clean_word( w: str ) -> str:
 
     return w2
 
-def clean_map( m: {} ) -> {}:
+def refine_map( m: {} ) -> {}:
 
     res = {}
 
     for k, v in m.items():
-        res[ k ] = clean_word( v )
+        res[ k ] = refine_word( v )
 
     return res
 
@@ -82,15 +82,15 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
         # put initial word
         matches.append( v )
 
-        v_clean = clean_word( v )
+        v_refine = refine_word( v )
 
         for k_2, v_2 in map_a.items():
             if k_2 in processed_keys:
                 continue
 
-            v_2_clean = clean_word( v_2 )
+            v_2_refine = refine_word( v_2 )
 
-            similarity_type = check_similarity( v_clean, v_2_clean )
+            similarity_type = check_similarity( v_refine, v_2_refine )
 
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
