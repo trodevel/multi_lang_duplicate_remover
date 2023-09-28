@@ -117,6 +117,7 @@ class DuplicateRemover:
 
         for sim_group in list_a:
             for e in sim_group:
+                pass
 
         return res
 
