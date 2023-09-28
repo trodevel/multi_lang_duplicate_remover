@@ -65,7 +65,7 @@ class SimilarityGroupJoiner:
 
         return res
 
-    def _find_group_by_key( k: int, is_map_a: bool ) -> []:
+    def _find_group_by_key( self, k: int, is_map_a: bool ) -> []:
 
         res = []
 
