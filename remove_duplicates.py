@@ -119,7 +119,7 @@ class DuplicateRemover:
             # put initial word
             self.matches.append( k )
 
-            similar_values = self._find_duplicates_for_word( v )
+            similar_values = self._find_duplicates_for_word( v, map_refined )
 
             if len( similar_values ):
                 print( f"DEBUG: num similar values {len(similar_values)}" )
