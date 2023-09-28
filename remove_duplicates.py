@@ -100,7 +100,7 @@ class DuplicateRemover:
 
         res = {}
 
-        num_rec = len( map_redined )
+        num_rec = len( map_refined )
         cur_rec = 0
 
         for k, v in map_refined.items():
