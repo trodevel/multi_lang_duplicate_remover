@@ -103,21 +103,6 @@ class DuplicateRemover:
 
         return res
 
-    def _join_keys( list_a: [], list_b: [] ) -> []:
-
-        print( f"INFO: joining keys" )
-
-        res = []
-
-        for sim_group in list_a:
-            for e in sim_group:
-                pass
-
-        return res
-
-    def _find_similarity_group( k: int, list_b: [] ) -> []:
-        pass
-
     def _refine_and_find_duplicates( self, map_raw: {} ) -> []:
 
         print( f"INFO: refining map" )
