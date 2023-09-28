@@ -94,31 +94,56 @@ def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityTy
 
 class SimilarityGroupJoiner:
 
-    def __init__( self, map_a: {}, similarity_pct: int ):
+    def __init__( self, map_a: {}, map_b: {} ):
         self.map_a = map_a
-        self.similarity_pct = similarity_pct
-        self.iteration_processed_keys = None
+        self.map_b = map_b
+        self.processed_keys = None
+        self.current_joined_similarity_group = None
 
-    def join_groups(self) -> [[], []]:
-
-        res = self._refine_and_find_duplicates( self.map_a )
-
-        return res
-
-    def _join_keys( list_a: [], list_b: [] ) -> []:
+    def join_groups(self) -> []:
 
         print( f"INFO: joining keys" )
 
         res = []
 
-        for sim_group in list_a:
-            for e in sim_group:
-                pass
+        self.processed_keys = {}
+
+        for group in map_a:
+
+            self.current_joined_similarity_group = []
+
+            self._process_group_of_map_a( group )
+
+            res.append( self.current_joined_similarity_group )
 
         return res
 
-    def _find_similarity_group( k: int, list_b: [] ) -> []:
-        pass
+    def _process_group_of_map_a( group: [] )
+
+        for k in group:
+            if k in self.processed_keys:
+                continue
+            self.current_joined_similarity_group.append( k )
+            self.processed_keys[k] = 1
+            self._find_similarities_in_map_b( k )
+
+    def _process_group_of_map_b( group: [] )
+
+        for k in group:
+            if k in self.processed_keys:
+                continue
+            self.current_joined_similarity_group.append( k )
+            self.processed_keys[k] = 1
+            self._find_similarities_in_map_a( k )
+
+    def _find_similarities_in_map_b( k: int ) -> None:
+
+        for group in map_b:
+            if k in group:
+                for k_2 in group:
+                    self.current_joined_similarity_group.append( k_2 )
+                    self.processed_keys[k_2] = 1
+                    self._find_similarities_in_map_a( k_2 )
 
     def _refine_and_find_duplicates( self, map_raw: {} ) -> []:
 
@@ -139,7 +164,7 @@ class SimilarityGroupJoiner:
         orig_size = len( map_refined )
         cur_rec = 0
 
-        self.iteration_processed_keys = {}
+        self.processed_keys = {}
 
         while len( map_refined ):
 
@@ -158,8 +183,8 @@ class SimilarityGroupJoiner:
             if len( self.iteration_matches ) > 1:
                 print( f"DEBUG: removing processed {len(self.iteration_matches)} elements" )
 
-            #print( f"DEBUG: iteration processed keys {self.iteration_processed_keys}" )
-            for k_m in self.iteration_processed_keys.keys():
+            #print( f"DEBUG: iteration processed keys {self.processed_keys}" )
+            for k_m in self.processed_keys.keys():
                 #print( f"DEBUG: removing key {k_m}" )
                 del map_refined[k_m]
 
@@ -172,7 +197,7 @@ class SimilarityGroupJoiner:
         res = []
 
         self.iteration_matches = []
-        self.iteration_processed_keys = { k: 1 }
+        self.processed_keys = { k: 1 }
 
         # put initial word
         self.iteration_matches.append( k )
@@ -195,17 +220,17 @@ class SimilarityGroupJoiner:
         similar_values = []
 
         for k_2, v_2 in map_refined.items():
-            if k_2 in self.iteration_processed_keys:
+            if k_2 in self.processed_keys:
                 continue
 
             similarity_type = check_similarity( v, v_2, self.similarity_pct )
 
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
-                self.iteration_processed_keys[ k_2 ] = 1
+                self.processed_keys[ k_2 ] = 1
             elif similarity_type == SimilarityType.SIMILAR:
                 # similar, but not a duplicate, add it
-                self.iteration_processed_keys[ k_2 ] = 1
+                self.processed_keys[ k_2 ] = 1
                 similar_values.append( v_2 )
                 self.iteration_matches.append( k_2 )
             else:
