@@ -14,7 +14,7 @@ FO="$INP"  # work-around
 ./convert_xlsx_to_csv.sh $FO.srt.uniq.num.ru.en.xlsx
 
 # ru
-cat $FO.srt.uniq.num.ru.csv $FO.srt.uniq.num.en.ru.csv > $OUTP.ru.csv
+cat $FO.srt.uniq.num.ru.csv $FO.srt.uniq.num.en.ru.csv | sort -n > $OUTP.ru.csv
 
 # en
-cat $FO.srt.uniq.num.en.csv $FO.srt.uniq.num.ru.en.csv > $OUTP.en.csv
+cat $FO.srt.uniq.num.en.csv $FO.srt.uniq.num.ru.en.csv | sort -n > $OUTP.en.csv
