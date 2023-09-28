@@ -56,20 +56,20 @@ class SimilarityType(int,Enum):
     SIMILAR   = 1
     DUPLICATE = 2
 
-def check_similarity( w_1: str, w_2: str ) -> SimilarityType:
+def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityType:
     r = fuzz.ratio( w_1, w_2 )
 
     if r >= 95:
         print( f"DEBUG: DUP - w_1 '{w_1}', w_2 '{w_2}'" )
         return SimilarityType.DUPLICATE
-    elif r >= 80:
+    elif r >= similarity_pct:
         print( f"DEBUG: SIM - w_1 '{w_1}', w_2 '{w_2}'" )
         return SimilarityType.SIMILAR
 
     print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
     return SimilarityType.DIFFERENT
 
-def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
+def remove_duplicates( map_a: {}, map_b: {}, similarity_pct: int ) -> [{}, {}]:
 
     res_a = {}
     res_b = {}
@@ -102,7 +102,7 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
         # put initial word
         matches.append( orig_v )
 
-        for k_2, v_2 in map_a.items():
+        for k_2, v_2 in map_a_refined.items():
             if k_2 in processed_keys:
                 continue
 
@@ -124,14 +124,14 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
 
     return [ res_a, res_b ]
 
-def process( inp_filenames: [str], outp_filenames: [str] ):
+def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
 
     num_req = 0
 
     map_a = read_map( inp_filenames[0] )
     map_b = read_map( inp_filenames[1] )
 
-    res_a, res_b = remove_duplicates( map_a, map_b )
+    res_a, res_b = remove_duplicates( map_a, map_b, similarity_pct )
 
     write_map( res_a, outp_filenames[0] )
     write_map( res_b, outp_filenames[1] )
@@ -141,9 +141,10 @@ def main( argv ):
     input_files  = []
     output_files = []
     loglevel    = 0
+    similarity_pct = 85
 
     try:
-        opts, args = getopt.getopt(argv,"hHdi:t:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","offset="])
+        opts, args = getopt.getopt(argv,"hHdi:s:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","offset="])
     except getopt.GetoptError:
         print( 'remove_duplicates.py [-H]' )
         sys.exit(2)
@@ -157,10 +158,13 @@ def main( argv ):
             input_files = arg.split(',')
         elif opt in ("-o", "--ofile"):
             output_files = arg.split(',')
+        elif opt in ("-s", "--sim"):
+            similarity_pct = int( arg )
 
     #set_loglevel( loglevel )
 
     print( f"DEBUG: num input file = {len(input_files)}" )
+    print( f"DEBUG: similarity_pct = {similarity_pct}" )
 
     if len( input_files ) != 2:
         print( "FATAL: need 2 comma-separated input filenames" )
@@ -170,7 +174,7 @@ def main( argv ):
         print( "FATAL: need 2 comma-separated output filenames" )
         sys.exit( 1 )
 
-    process( input_files, output_files )
+    process( input_files, output_files, similarity_pct )
 
     sys.exit( 0 )
 
