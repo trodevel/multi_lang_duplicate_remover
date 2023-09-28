@@ -69,60 +69,76 @@ def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityTy
     #print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
     return SimilarityType.DIFFERENT
 
-def remove_duplicates( map_a: {}, map_b: {}, similarity_pct: int ) -> [{}, {}]:
+class DuplicateRemover:
 
-    res_a = {}
-    res_b = {}
+    def __init__( self, map_a: {}, map_b: {}, similarity_pct: int ):
+        self.map_a = map_a
+        self.map_b = map_b
+        self.similarity_pct = similarity_pct
+        self.map_a_refined = None
+        self.map_b_refined = None
+        self.processed_keys = None
 
-    print( f"DEBUG: refining maps" )
+    def remove_duplicates(self) -> [{}, {}]:
 
-    map_a_refined = refine_map( map_a )
-    map_b_refined = refine_map( map_b )
+        res_a = {}
+        res_b = {}
 
-    processed_keys = {}
+        print( f"DEBUG: refining maps" )
 
-    num_rec = len( map_a )
-    cur_rec = 0
+        self.map_a_refined = refine_map( self.map_a )
+        self.map_b_refined = refine_map( self.map_b )
 
-    for k, v in map_a_refined.items():
+        self.processed_keys = {}
 
-        cur_rec += 1
+        num_rec = len( self.map_a )
+        cur_rec = 0
 
-        if k in processed_keys:
-            continue
+        for k, v in self.map_a_refined.items():
 
-        print( f"DEBUG: processing record {cur_rec}/{num_rec}, num processed keys {len(processed_keys)}" )
+            cur_rec += 1
 
-        processed_keys[ k ] = 1
-
-        matches = []
-
-        orig_v = map_a[ k ]
-
-        # put initial word
-        matches.append( orig_v )
-
-        for k_2, v_2 in map_a_refined.items():
-            if k_2 in processed_keys:
+            if k in self.processed_keys:
                 continue
 
-            similarity_type = check_similarity( v, v_2, similarity_pct )
+            print( f"DEBUG: processing record {cur_rec}/{num_rec}, num processed keys {len(self.processed_keys)}" )
 
-            if similarity_type == SimilarityType.DUPLICATE:
-                # duplicate, just ignore it
-                processed_keys[ k_2 ] = 1
-            elif similarity_type == SimilarityType.SIMILAR:
-                # similar, but not a duplicate, add it
-                processed_keys[ k_2 ] = 1
-                orig_v_2 = map_a[ k_2 ]
-                matches.append( orig_v_2 )
-            else:
-                # do nothing
+            self.processed_keys[ k ] = 1
+
+            similar_keys = {}
+
+            matches = []
+
+            orig_v = self.map_a[ k ]
+
+            # put initial word
+            matches.append( orig_v )
+
+            for k_2, v_2 in self.map_a_refined.items():
+                if k_2 in self.processed_keys:
+                    continue
+
+                similarity_type = check_similarity( v, v_2, self.similarity_pct )
+
+                if similarity_type == SimilarityType.DUPLICATE:
+                    # duplicate, just ignore it
+                    self.processed_keys[ k_2 ] = 1
+                elif similarity_type == SimilarityType.SIMILAR:
+                    # similar, but not a duplicate, add it
+                    self.processed_keys[ k_2 ] = 1
+                    similar_keys[ k_2 ] = 1
+                    orig_v_2 = self.map_a[ k_2 ]
+                    matches.append( orig_v_2 )
+                else:
+                    # do nothing
+                    pass
+
+            if len( similar_keys ):
                 pass
 
-        res_a[ k ] = matches
+            res_a[ k ] = matches
 
-    return [ res_a, res_b ]
+        return [ res_a, res_b ]
 
 def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
 
@@ -131,7 +147,9 @@ def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
     map_a = read_map( inp_filenames[0] )
     map_b = read_map( inp_filenames[1] )
 
-    res_a, res_b = remove_duplicates( map_a, map_b, similarity_pct )
+    r = DuplicateRemover( map_a, map_b, similarity_pct )
+
+    res_a, res_b = r.remove_duplicates()
 
     write_map( res_a, outp_filenames[0] )
     write_map( res_b, outp_filenames[1] )
