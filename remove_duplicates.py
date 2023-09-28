@@ -71,26 +71,27 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
     res_a = {}
     res_b = {}
 
+    map_a_refined = refine_map( map_a )
+    map_b_refined = refine_map( map_b )
+
     processed_keys = {}
 
-    for k, v in map_a.items():
+    for k, v in map_a_refined.items():
 
         processed_keys[ k ] = 1
 
         matches = []
 
-        # put initial word
-        matches.append( v )
+        orig_v = map_a[ k ]
 
-        v_refine = refine_word( v )
+        # put initial word
+        matches.append( orig_v )
 
         for k_2, v_2 in map_a.items():
             if k_2 in processed_keys:
                 continue
 
-            v_2_refine = refine_word( v_2 )
-
-            similarity_type = check_similarity( v_refine, v_2_refine )
+            similarity_type = check_similarity( v, v_2 )
 
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
@@ -98,7 +99,8 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
             elif similarity_type == SimilarityType.SIMILAR:
                 # similar, but not a duplicate, add it
                 processed_keys[ k ] = 1
-                matches.append( v )
+                orig_v_2 = map_a[ k_2 ]
+                matches.append( v_2 )
             else:
                 # do nothing
                 pass
