@@ -106,7 +106,7 @@ def remove_duplicates( map_a: {}, map_b: {}, similarity_pct: int ) -> [{}, {}]:
             if k_2 in processed_keys:
                 continue
 
-            similarity_type = check_similarity( v, v_2 )
+            similarity_type = check_similarity( v, v_2, similarity_pct )
 
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
