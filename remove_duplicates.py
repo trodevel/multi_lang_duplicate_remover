@@ -76,7 +76,14 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
 
     processed_keys = {}
 
+    num_rec = len( map_a )
+    cur_rec = 0
+
     for k, v in map_a_refined.items():
+
+        cur_rec += 1
+
+        print( f"DEBUG: processing record {cur_rec}/{num_rec}, num processed keys {len(processed_keys)}" )
 
         processed_keys[ k ] = 1
 
