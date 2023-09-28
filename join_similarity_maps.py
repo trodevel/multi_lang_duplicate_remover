@@ -55,11 +55,11 @@ class SimilarityGroupJoiner:
 
             group = self._find_group_by_key( k, True )
 
-            self._process_group_of_map_a( group )
+            self._process_group_of_map( group, True )
 
             group = self._find_group_by_key( k, False )
 
-            self._process_group_of_map_a( group )
+            self._process_group_of_map( group, False )
 
             res.append( self.current_joined_similarity_group )
 
@@ -93,23 +93,14 @@ class SimilarityGroupJoiner:
 
         return all_keys.keys()
 
-    def _process_group_of_map_a( self, group: [] ):
+    def _process_group_of_map( self, group: [], is_map_a: bool ):
 
         for k in group:
             if k in self.processed_keys:
                 continue
             self.current_joined_similarity_group.append( k )
             self.processed_keys[k] = 1
-            self._find_similarities_in_map( k, False )
-
-    def _process_group_of_map_b( self, group: [] ):
-
-        for k in group:
-            if k in self.processed_keys:
-                continue
-            self.current_joined_similarity_group.append( k )
-            self.processed_keys[k] = 1
-            self._find_similarities_in_map( k, True )
+            self._find_similarities_in_map( k, False if is_map_a else True )
 
     def _find_similarities_in_map( self, k: int, is_map_a: bool ) -> None:
 
