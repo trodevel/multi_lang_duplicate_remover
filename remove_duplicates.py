@@ -19,12 +19,12 @@ def read_map( filename: str ) -> {}:
 
     return res
 
-def write_map( m: {}, filename: str ) -> None:
+def write_map( m: [], filename: str ) -> None:
 
     writer = csv.writer( open( filename, "w" ), delimiter=';', lineterminator='\n' )
 
-    for k, v in m.items():
-        writer.writerow( ( v ) )
+    for e in m:
+        writer.writerow( ( e ) )
 
     print( f"INFO: wrote {len(m)} records to {filename}" )
 
@@ -99,10 +99,10 @@ class DuplicateRemover:
         self.processed_keys = None
         self.duplicate_keys = None
 
-    def remove_duplicates(self) -> [{}, {}]:
+    def remove_duplicates(self) -> [[], []]:
 
-        res_a = {}
-        res_b = {}
+        res_a = []
+        res_b = []
 
         self.processed_keys = {}
         self.duplicate_keys = {}
@@ -116,7 +116,7 @@ class DuplicateRemover:
         return [ res_a, res_b ]
 
 
-    def _refine_and_find_duplicates( self, map_raw: {} ):
+    def _refine_and_find_duplicates( self, map_raw: {} ) -> []:
 
         print( f"DEBUG: refining map" )
 
@@ -128,39 +128,58 @@ class DuplicateRemover:
 
         return res
 
-    def _find_duplicates( self, map_refined: {} ):
+    def _find_duplicates( self, map_refined: {} ) -> []:
 
-        res = {}
+        res = []
 
         num_rec = len( map_refined )
         cur_rec = 0
 
-        for k, v in map_refined.items():
+        while len( map_refined ):
+
+            k = next( iter( map_refined ) )
+            v = map_refined[k]
 
             cur_rec += 1
 
-            if k in self.processed_keys:
-                continue
-
             print( f"DEBUG: processing record {cur_rec}/{num_rec}, key {k}, num processed keys {len(self.processed_keys)}" )
 
-            self.processed_keys[ k ] = 1
+            self._find_duplicates_once( k, v, map_refined )
 
-            self.iteration_matches = []
+            if len( self.iteration_matches ) > 1:
+                print( f"DEBUG: removing processed {len(self.iteration_matches)} elements" )
 
-            # put initial word
-            self.iteration_matches.append( k )
+            for k_m in self.iteration_matches:
+                del map_refined[k_m]
 
-            similar_values = self._find_duplicates_for_word( v, map_refined )
+            res.append( self.iteration_matches )
 
-            if len( similar_values ):
-                print( f"DEBUG: num similar values {len(similar_values)}" )
-                for e in similar_values:
-                    n = self._find_duplicates_for_word( e, map_refined )
-                    if len( n ):
-                        print( f"DEBUG: found {len(n)} additional similar values" )
+        return res
 
-            res[ k ] = self.iteration_matches
+    def _find_duplicates_once( self, k: int, v: str, map_refined: {} ) -> []:
+
+        res = []
+
+        if k in self.processed_keys:
+            continue
+
+        self.processed_keys[ k ] = 1
+
+        self.iteration_matches = []
+
+        # put initial word
+        self.iteration_matches.append( k )
+
+        similar_values = self._find_duplicates_for_word( v, map_refined )
+
+        if len( similar_values ):
+            print( f"DEBUG: num similar values {len(similar_values)}" )
+            for e in similar_values:
+                n = self._find_duplicates_for_word( e, map_refined )
+                if len( n ):
+                    print( f"DEBUG: found {len(n)} additional similar values" )
+
+        res.append( self.iteration_matches )
 
         return res
 
