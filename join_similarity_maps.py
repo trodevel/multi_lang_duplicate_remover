@@ -1,6 +1,4 @@
 import csv
-from enum import Enum
-from thefuzz import fuzz
 
 import sys, getopt
 
@@ -29,68 +27,6 @@ def write_map( m: [], filename: str ) -> None:
         writer.writerow( ( e ) )
 
     print( f"INFO: wrote {len(m)} records to {filename}" )
-
-def remove_all_whitespaces( w: str ) -> str:
-    return ''.join(w.split())
-
-def remove_all_nonalphanum( w: str ) -> str:
-    return ''.join(e for e in w if e.isalnum())
-
-def refine_word( w: str ) -> str:
-
-    w1 = remove_all_nonalphanum( w )
-
-    w2 = w1.lower()
-
-    return w2
-
-def refine_map( m: {} ) -> {}:
-
-    res = {}
-
-    for k, v in m.items():
-        res[ k ] = refine_word( v )
-
-    return res
-
-class SimilarityType(int,Enum):
-    DIFFERENT = 0
-    SIMILAR   = 1
-    DUPLICATE = 2
-
-def is_fuzzy_comparison_needed( w_1: str, w_2: str, similarity_pct: int ) -> bool:
-    l1 = len( w_1 )
-    l2 = len( w_2 )
-
-    if l1 == l2:
-        return True
-
-    mx = max( l1, l2 )
-    mn = min( l1, l2 )
-
-    ratio = mn * 100 / mx
-
-    if ratio >= similarity_pct:
-        return True
-
-    return False
-
-def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityType:
-
-    if is_fuzzy_comparison_needed( w_1, w_2, similarity_pct ) == False:
-        return SimilarityType.DIFFERENT
-
-    r = fuzz.ratio( w_1, w_2 )
-
-    if r >= 95:
-        #print( f"DEBUG: DUP - w_1 '{w_1}', w_2 '{w_2}'" )
-        return SimilarityType.DUPLICATE
-    elif r >= similarity_pct:
-        #print( f"DEBUG: SIM - w_1 '{w_1}', w_2 '{w_2}'" )
-        return SimilarityType.SIMILAR
-
-    #print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
-    return SimilarityType.DIFFERENT
 
 class SimilarityGroupJoiner:
 
