@@ -15,6 +15,8 @@ def read_similarity_map( filename: str ) -> []:
             for i in row:
                 int_row.append( int( i ) )
 
+            res.append( int_row )
+
     print( f"INFO: read {len(res)} records from {filename}" )
 
     return res
