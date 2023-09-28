@@ -105,25 +105,25 @@ class DuplicateRemover:
 
             self.processed_keys[ k ] = 1
 
-            similar_keys = {}
-
-            matches = []
+            self.matches = []
 
             orig_v = self.map_a[ k ]
 
             # put initial word
-            matches.append( orig_v )
+            self.matches.append( orig_v )
 
-            self._remove_duplicates_for_word( v )
+            similar_keys = self._remove_duplicates_for_word( v )
 
             if len( similar_keys ):
                 pass
 
-            res_a[ k ] = matches
+            res_a[ k ] = self.matches
 
         return [ res_a, res_b ]
 
     def _remove_duplicates_for_word( self, v: str ):
+
+        similar_keys = {}
 
         for k_2, v_2 in self.map_a_refined.items():
             if k_2 in self.processed_keys:
@@ -139,10 +139,12 @@ class DuplicateRemover:
                 self.processed_keys[ k_2 ] = 1
                 similar_keys[ k_2 ] = 1
                 orig_v_2 = self.map_a[ k_2 ]
-                matches.append( orig_v_2 )
+                self.matches.append( orig_v_2 )
             else:
                 # do nothing
                 pass
+
+        return similar_keys
 
 
 def process( inp_filenames: [str], outp_filenames: [str], similarity_pct: int ):
