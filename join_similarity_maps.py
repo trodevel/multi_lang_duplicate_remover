@@ -125,7 +125,7 @@ class SimilarityGroupJoiner:
                 continue
             self.current_joined_similarity_group.append( k )
             self.processed_keys[k] = 1
-            self._find_similarities_in_map_b( k )
+            self._find_similarities_in_map( k, False )
 
     def _process_group_of_map_b( group: [] )
 
@@ -134,17 +134,21 @@ class SimilarityGroupJoiner:
                 continue
             self.current_joined_similarity_group.append( k )
             self.processed_keys[k] = 1
-            self._find_similarities_in_map_a( k )
+            self._find_similarities_in_map( k, True )
 
-    def _find_similarities_in_map_b( k: int ) -> None:
+    def _find_similarities_in_map( k: int, is_map_a: bool ) -> None:
 
-        for group in map_b:
-            if k in group:
-                for k_2 in group:
-                    self.current_joined_similarity_group.append( k_2 )
-                    self.processed_keys[k_2] = 1
-                    self._find_similarities_in_map_a( k_2 )
+        map_a_or_b = self.map_a if is_map_a else self.map_b
 
+        for group in map_a_or_b:
+            if k not in group:
+                continue
+            for k_2 in group:
+                if k_2 in self.processed_keys:
+                    continue
+                self.current_joined_similarity_group.append( k_2 )
+                self.processed_keys[k_2] = 1
+                self._find_similarities_in_map( k_2, False if is_map_a else True )
 
 def process( inp_filenames: [str], outp_filename: str, similarity_pct: int ):
 
