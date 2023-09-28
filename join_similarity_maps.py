@@ -118,7 +118,7 @@ class SimilarityGroupJoiner:
 
         return res
 
-    def _process_group_of_map_a( group: [] ):
+    def _process_group_of_map_a( self, group: [] ):
 
         for k in group:
             if k in self.processed_keys:
@@ -127,7 +127,7 @@ class SimilarityGroupJoiner:
             self.processed_keys[k] = 1
             self._find_similarities_in_map( k, False )
 
-    def _process_group_of_map_b( group: [] ):
+    def _process_group_of_map_b( self, group: [] ):
 
         for k in group:
             if k in self.processed_keys:
