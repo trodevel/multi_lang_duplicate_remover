@@ -56,6 +56,22 @@ class SimilarityGroupJoiner:
 
         return res
 
+    def _get_all_keys( self ) -> []:
+
+        all_keys = {}
+
+        for group in self.map_a:
+            for k in group:
+                if k not in all_keys:
+                    all_keys[k] = 1
+
+        for group in self.map_b:
+            for k in group:
+                if k not in all_keys:
+                    all_keys[k] = 1
+
+        return all_keys.keys()
+
     def _get_all_groups( self ) -> [[]]:
 
         res = []
