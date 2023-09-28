@@ -129,7 +129,8 @@ class DuplicateRemover:
                 print( f"DEBUG: num similar values {len(similar_values)}" )
                 for e in similar_values:
                     n = self._find_duplicates_for_word( e, map_refined )
-                    print( f"DEBUG: found {len(n)} additional similar values" )
+                    if len( n ):
+                        print( f"DEBUG: found {len(n)} additional similar values" )
 
             res[ k ] = self.matches
 
