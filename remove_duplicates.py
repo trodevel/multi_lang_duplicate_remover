@@ -71,6 +71,8 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
     res_a = {}
     res_b = {}
 
+    print( f"DEBUG: refining maps" )
+
     map_a_refined = refine_map( map_a )
     map_b_refined = refine_map( map_b )
 
@@ -82,6 +84,9 @@ def remove_duplicates( map_a: {}, map_b: {} ) -> [{}, {}]:
     for k, v in map_a_refined.items():
 
         cur_rec += 1
+
+        if k in processed_keys:
+            continue
 
         print( f"DEBUG: processing record {cur_rec}/{num_rec}, num processed keys {len(processed_keys)}" )
 
