@@ -75,30 +75,36 @@ class DuplicateRemover:
         self.map_a = map_a
         self.map_b = map_b
         self.similarity_pct = similarity_pct
-        self.map_a_refined = None
-        self.map_b_refined = None
         self.processed_keys = None
+        self.duplicate_keys = None
 
     def remove_duplicates(self) -> [{}, {}]:
 
         res_a = {}
         res_b = {}
 
-        print( f"DEBUG: refining maps" )
+        self.processed_keys = {}
 
-        self.map_a_refined = refine_map( self.map_a )
-        self.map_b_refined = refine_map( self.map_b )
+        res_a = self._refine_and_find_duplicates( self.map_a )
 
         self.processed_keys = {}
 
-        res_a = self._find_duplicates( self.map_a_refined )
-
-        self.processed_keys = {}
-
-        res_b = self._find_duplicates( self.map_b_refined )
+        res_b = self._refine_and_find_duplicates( self.map_b )
 
         return [ res_a, res_b ]
 
+
+    def _refine_and_find_duplicates( self, map_raw: {} ):
+
+        print( f"DEBUG: refining map" )
+
+        map_refined = refine_map( map_raw )
+
+        print( f"DEBUG: finding duplicates" )
+
+        res = self._find_duplicates( self.map_refined )
+
+        return res
 
     def _find_duplicates( self, map_refined: {} ):
 
