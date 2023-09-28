@@ -60,13 +60,13 @@ def check_similarity( w_1: str, w_2: str, similarity_pct: int  ) -> SimilarityTy
     r = fuzz.ratio( w_1, w_2 )
 
     if r >= 95:
-        print( f"DEBUG: DUP - w_1 '{w_1}', w_2 '{w_2}'" )
+        #print( f"DEBUG: DUP - w_1 '{w_1}', w_2 '{w_2}'" )
         return SimilarityType.DUPLICATE
     elif r >= similarity_pct:
-        print( f"DEBUG: SIM - w_1 '{w_1}', w_2 '{w_2}'" )
+        #print( f"DEBUG: SIM - w_1 '{w_1}', w_2 '{w_2}'" )
         return SimilarityType.SIMILAR
 
-    print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
+    #print( f"DEBUG: DIF - w_1 '{w_1}', w_2 '{w_2}'" )
     return SimilarityType.DIFFERENT
 
 def remove_duplicates( map_a: {}, map_b: {}, similarity_pct: int ) -> [{}, {}]:
