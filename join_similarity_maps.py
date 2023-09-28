@@ -189,7 +189,6 @@ def main( argv ):
 
     print( f"DEBUG: num input file = {len(input_files)}" )
     print( f"DEBUG: output file    = {output_file}" )
-    print( f"DEBUG: similarity_pct = {similarity_pct}" )
 
     if len( input_files ) != 2:
         print( "FATAL: need 2 comma-separated input filenames" )
