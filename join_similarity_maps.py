@@ -150,16 +150,16 @@ class SimilarityGroupJoiner:
                 self.processed_keys[k_2] = 1
                 self._find_similarities_in_map( k_2, False if is_map_a else True )
 
-def process( inp_filenames: [str], outp_filename: str, similarity_pct: int ):
+def process( inp_filenames: [str], outp_filename: str ):
 
     num_req = 0
 
     map_a = read_similarity_map( inp_filenames[0] )
     map_b = read_similarity_map( inp_filenames[1] )
 
-#    r = SimilarityGroupJoiner( map_a, map_b, similarity_pct )
+    r = SimilarityGroupJoiner( map_a, map_b )
 
-#    res = r.join_groups()
+    res = r.join_groups()
 
 #    write_map( res, outp_filename )
 
@@ -168,10 +168,9 @@ def main( argv ):
     input_files  = []
     output_file = None
     loglevel    = 0
-    similarity_pct = 85
 
     try:
-        opts, args = getopt.getopt(argv,"hHdi:s:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","ofile="])
+        opts, args = getopt.getopt(argv,"hHdi:l:o:D",["HEADLESS","dry","DEBUG","ifile=","type=","limit=","ofile="])
     except getopt.GetoptError:
         print( 'remove_duplicates.py [-H]' )
         sys.exit(2)
@@ -185,8 +184,6 @@ def main( argv ):
             input_files = arg.split(',')
         elif opt in ("-o", "--ofile"):
             output_file = arg
-        elif opt in ("-s", "--sim"):
-            similarity_pct = int( arg )
 
     #set_loglevel( loglevel )
 
@@ -202,7 +199,7 @@ def main( argv ):
         print( "FATAL: need output filename" )
         sys.exit( 1 )
 
-    process( input_files, output_file, similarity_pct )
+    process( input_files, output_file )
 
     sys.exit( 0 )
 
