@@ -11,7 +11,7 @@ def apply_map( inp: [[]], mapp: [] ) -> []:
 
     for group in mapp:
         line = []
-        if k in group:
+        for k in group:
             line.append( inp[k] )
         res.append( line )
 
