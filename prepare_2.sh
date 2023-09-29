@@ -10,11 +10,11 @@ OUTP=$2
 #FO="${INP%%.*}"
 FO="$INP"  # work-around
 
-./convert_xlsx_to_csv.sh $FO.srt.uniq.num.en.ru.xlsx
-./convert_xlsx_to_csv.sh $FO.srt.uniq.num.ru.en.xlsx
+./convert_xlsx_to_csv.sh $FO.4.en.ru.xlsx
+./convert_xlsx_to_csv.sh $FO.4.ru.en.xlsx
 
 # ru
-cat $FO.srt.uniq.num.ru.csv $FO.srt.uniq.num.en.ru.csv | sort -n > $OUTP.ru.csv
+cat $FO.4.ru.csv $FO.4.en.ru.csv | sort -n > $OUTP.ru.csv
 
 # en
-cat $FO.srt.uniq.num.en.csv $FO.srt.uniq.num.ru.en.csv | sort -n > $OUTP.en.csv
+cat $FO.4.en.csv $FO.4.ru.en.csv | sort -n > $OUTP.en.csv
