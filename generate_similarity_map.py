@@ -164,6 +164,9 @@ class DuplicateRemover:
             if similarity_type == SimilarityType.DUPLICATE:
                 # duplicate, just ignore it
                 self.iteration_processed_keys[ k_2 ] = 1
+                # need to add to similar_values because later join may insert it again as a new key
+                similar_values.append( v_2 )
+                self.iteration_matches.append( k_2 )
             elif similarity_type == SimilarityType.SIMILAR:
                 # similar, but not a duplicate, add it
                 self.iteration_processed_keys[ k_2 ] = 1
