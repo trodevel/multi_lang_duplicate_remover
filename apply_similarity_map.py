@@ -3,27 +3,19 @@ import csv
 import sys, getopt
 from csv_io import read_map, read_similarity_map, write_map
 
-class SimilarityGroupJoiner:
+def apply_map( inp: [[]], mapp: [] ) -> []:
 
-    def __init__( self, map_a: {}, map_b: {} ):
-        self.map_a = map_a
-        self.map_b = map_b
-        self.processed_keys = None
-        self.current_joined_similarity_group = None
+    print( f"INFO: applying map" )
 
-    def apply_map( inp: [[]], mapp: [] ) -> []:
+    res = []
 
-        print( f"INFO: joining keys" )
+    for group in mapp:
+        line = []
+        if k in group:
+            line.append( inp[k] )
+        res.append( line )
 
-        res = []
-
-        for group in mapp:
-            line = []
-            if k in group:
-                line.append( inp[k] )
-            res.append( line )
-
-        return res
+    return res
 
 def process( inp_filename: str, outp_filename: str, map_filename: str ):
 
