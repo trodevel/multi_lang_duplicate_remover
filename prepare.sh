@@ -5,7 +5,7 @@ FL=$1
 [[ -z $FL ]]   && echo "ERROR: input file is not given" && exit 1
 [[ ! -f $FL ]] && echo "ERROR: input file $FL is missing" && exit 1
 
-FO="${FL%%.*}"
+FO="${FL%.*}"
 
 sort $FL > $FO.1.csv
 uniq $FO.1.csv > $FO.2.csv
